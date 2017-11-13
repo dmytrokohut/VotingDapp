@@ -1,0 +1,9 @@
+### Custom ###
+bin/
+.classpath
+.gradle/
+.project
+.settings/
+build.fxbuild
+settings.gradle
+gradle/

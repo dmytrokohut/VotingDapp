@@ -1,0 +1,14 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'application'
+
+mainClassName = 'com.dkohut.voting.Main'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile('org.web3j:core:3.0.1')
+	compile('org.web3j:crypto:3.0.1')
+}
