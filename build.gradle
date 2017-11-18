@@ -9,6 +9,28 @@ repositories {
 }
 
 dependencies {
-	compile('org.web3j:core:3.0.1')
-	compile('org.web3j:crypto:3.0.1')
+	compile('org.web3j:core:3.1.1')
+	compile('org.web3j:crypto:3.1.1')
+	compile('org.web3j:codegen:3.1.1')
+}
+
+task generateWrapper(type: JavaExec) {
+	group 'Custom'
+	description 'Create wrapper classes for solidity smart contracts'
+
+	classpath = sourceSets.main.runtimeClasspath
+	main = 'com.dkohut.voting.generators.WrapperGenerator'
+	args 'src/main/resources/contracts/build'
+	args 'src/main/java'
+	args 'com.dkohut.voting.generated'
+}
+
+task compileContract(type: JavaExec) {
+	group 'Custom'
+	description 'Compile smart contract into ".abi" and ".bin" files'
+	
+	classpath = sourceSets.main.runtimeClasspath
+	main = 'com.dkohut.voting.generators.SolidityCompiler'
+	args 'src/main/resources/contracts'
+	args 'src/main/resources/contracts/build'
 }

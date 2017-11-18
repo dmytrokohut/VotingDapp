@@ -33,6 +33,10 @@ contract Voting {
         
         return votesReceived[candidate];
     }
+
+    function getCandidates() public constant returns (bytes32[]) {
+		return candidateList;
+    }
     
     function validCandidate(bytes32 candidate) private constant returns (bool) {
         for(uint8 i=0; i<candidateList.length; i++)
