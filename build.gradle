@@ -22,12 +22,12 @@ task generateWrapper(type: JavaExec) {
 	main = 'com.dkohut.voting.generators.WrapperGenerator'
 	args 'src/main/resources/contracts/build'
 	args 'src/main/java'
-	args 'com.dkohut.voting.generated'
+	args 'com.dkohut.voting.wrappers'
 }
 
 task compileContract(type: JavaExec) {
 	group 'Custom'
-	description 'Compile smart contract into ".abi" and ".bin" files'
+	description 'Compile smart contracts into ".abi" and ".bin" files'
 	
 	classpath = sourceSets.main.runtimeClasspath
 	main = 'com.dkohut.voting.generators.SolidityCompiler'

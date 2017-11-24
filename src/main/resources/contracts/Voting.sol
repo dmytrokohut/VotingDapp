@@ -1,26 +1,38 @@
-pragma solidity ^0.4.9;
+pragma solidity ^0.4.18;
 
 contract Voting {
     
-    address[] private voterList;
+    address internal organizer;
+    address[] public voterList;
+    bytes32[] public candidateList;
+    mapping(bytes32 => uint8) public votesReceived;
     
-    bytes32[] private candidateList;
+    event NewCandidate(address sender, bytes32 candidateName);
+    event Destroyed();
     
-    mapping(bytes32 => uint8) private votesReceived;
+    modifier organizerOnly() {
+        require(msg.sender == organizer);
+        _;
+    }
     
-    function Voting(bytes32[] candidateNames) public {
+    function Voting() public {
+        organizer = msg.sender;
+    }
+    
+    function init(bytes32[] candidateNames) organizerOnly external {
         for(uint8 i=0; i<candidateNames.length; i++) {
             candidateList.push(candidateNames[i]);
             votesReceived[candidateNames[i]] = 0;
         }
     }
     
-    function addCandidate(bytes32 candidate) public {
+    function addCandidate(bytes32 candidate) external {
         candidateList.push(candidate);
         votesReceived[candidate] = 0;
+        NewCandidate(msg.sender, candidate);
     }
     
-    function voteForCandidate(bytes32 candidate) public {
+    function voteForCandidate(bytes32 candidate) external {
         require(validVoter(msg.sender) == false);
         require(validCandidate(candidate) == true);
         
@@ -28,15 +40,10 @@ contract Voting {
         voterList.push(msg.sender);
     }
     
-    function votesOfCandidate(bytes32 candidate) public constant returns (uint8) {
-        require(validCandidate(candidate) == true);
-        
-        return votesReceived[candidate];
+    function getCandidateList() external constant returns(bytes32[]) {
+        return candidateList;
     }
-
-    function getCandidates() public constant returns (bytes32[]) {
-		return candidateList;
-    }
+    
     
     function validCandidate(bytes32 candidate) private constant returns (bool) {
         for(uint8 i=0; i<candidateList.length; i++)
@@ -52,6 +59,11 @@ contract Voting {
                 return true;
         
         return false;
+    }
+    
+    function kill() organizerOnly public {
+        selfdestruct(organizer);
+        Destroyed();
     }
     
 }

@@ -33,12 +33,15 @@
         <menus>
           <Menu mnemonicParsing="false" text="Contract">
                <items>
+                  <MenuItem mnemonicParsing="false" onAction="#openLoadCredentials" text="Load Credentails" />
                   <MenuItem fx:id="deployMenuItem" mnemonicParsing="false" onAction="#deployContract" text="Deploy New Contract" />
                   <MenuItem fx:id="loadContractMenu" mnemonicParsing="false" onAction="#loadContract" text="Load Contract" />
                </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Candidate">
               <items>
+                  <MenuItem mnemonicParsing="false" text="Initialize" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
                 <MenuItem mnemonicParsing="false" onAction="#addCandidate" text="Add New Candidate" />
               </items>
             </Menu>

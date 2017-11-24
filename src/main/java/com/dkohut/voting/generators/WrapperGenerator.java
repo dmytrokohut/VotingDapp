@@ -1,4 +1,4 @@
-package com.dkohut.voting.compilers;
+package com.dkohut.voting.generators;
 
 import java.io.File;
 import java.util.Arrays;

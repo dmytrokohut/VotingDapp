@@ -1,10 +1,11 @@
-package com.dkohut.voting;
+package com.dkohut.voting.controllers;
 
 import java.io.IOException;
 import java.util.logging.Logger;
 
+import com.dkohut.voting.Main;
 import com.dkohut.voting.entity.Candidate;
-import com.dkohut.voting.generated.Voting;
+import com.dkohut.voting.wrappers.Voting;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

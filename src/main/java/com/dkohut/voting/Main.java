@@ -12,8 +12,11 @@ import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.http.HttpService;
 
+import com.dkohut.voting.controllers.AddCandidate;
+import com.dkohut.voting.controllers.LoadContractController;
+import com.dkohut.voting.controllers.LoadCredentialsController;
 import com.dkohut.voting.entity.Candidate;
-import com.dkohut.voting.generated.Voting;
+import com.dkohut.voting.wrappers.Voting;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -54,21 +57,15 @@ public class Main extends Application {
 	@FXML MenuItem deployMenuItem;
 	
 
-	private static Web3j WEB3J = null;
-	
-	private static Credentials CREDENTIALS = null;
-	
-	private static Voting VOTING = null;
-	
-	private static ObservableList<Candidate> candidateList = FXCollections.observableArrayList();
-	
+	private static Web3j WEB3J;	
+	private static Credentials CREDENTIALS;	
+	private static Voting VOTING;	
+	private static ObservableList<Candidate> candidateList = FXCollections.observableArrayList();	
 	private static final Logger logger = Logger.getLogger(Main.class.getName());
 	
 
 	public static void main(String[] args) {
-		WEB3J = Web3j.build(new HttpService("http://localhost:8545"));
-		CREDENTIALS = Credentials.create("9199bd12b1147cd04d14d91dccb0627004f6ceccd239189964b5a986848fa169");
-		
+		WEB3J = Web3j.build(new HttpService("http://localhost:8545"));		
 		launch(args);
 	}
 	
@@ -97,22 +94,10 @@ public class Main extends Application {
 	 * 
 	 * @param ActionEvent actionEvent
 	 */
-	public void deployContract(ActionEvent actionEvent) {
-		
-		List<Bytes32> list = new ArrayList<>();
-		
-		candidateList.add(new Candidate("Dima", 0));
-		candidateList.add(new Candidate("Rama", 0));
-		candidateList.add(new Candidate("Jack", 0));
-		
-		for(Candidate candidate : candidateList) {
-			list.add(stringToBytes32(candidate.getName()));
-		}
-		
-		try {
-			DynamicArray<Bytes32> array = new DynamicArray<>(list);
+	public void deployContract(ActionEvent actionEvent) {		
+		try {			
 			VOTING = Voting
-					.deploy(WEB3J, CREDENTIALS, Voting.GAS_PRICE, Voting.GAS_LIMIT, array)
+					.deploy(WEB3J, CREDENTIALS, Voting.GAS_PRICE, Voting.GAS_LIMIT)
 					.send();
 			
 			System.out.println("Contract deployed");
@@ -124,34 +109,10 @@ public class Main extends Application {
 	}
 	
 	
-	/**
-	 * This method load existing in network contract.
-	 * 
-	 * @param ActionEvent actionEvent
-	 */
 	public void loadContract(ActionEvent actionEvent) {
-		try {
-			VOTING = Voting
-					.load("0x61af1cdec381b500d51bc35f1314f7d66ac7e8ef", WEB3J, CREDENTIALS, Voting.GAS_PRICE, Voting.GAS_LIMIT);
-			
-			DynamicArray<Bytes32> response = VOTING
-					.getCandidates()
-					.send();
-			
-			for(Bytes32 item : response.getValue()) {
-				Uint8 votesOfCandidate = VOTING
-						.votesOfCandidate(item)
-						.send();
-				
-				candidateList.add(new Candidate(new String(item.getValue()), votesOfCandidate.getValue().intValue()));
-			}
-			
-			setTableRecords();
-			System.out.println("Contract loaded");
-			
-		} catch (Exception e) {
-			logger.info("Contract not loaded\n" + e.getMessage() + "\n" + e.getStackTrace());
-		}
+		LoadContractController controller = new LoadContractController();
+		controller.showDialog();
+		logger.info("End of loadContract");
 	}
 	
 	
@@ -166,8 +127,8 @@ public class Main extends Application {
 			VOTING.voteForCandidate(stringToBytes32(selectedCandidate.getName())).send();
 			
 			Uint8 result = VOTING
-					.votesOfCandidate(stringToBytes32(selectedCandidate.getName()))
-					.send();			
+					.votesReceived(stringToBytes32(selectedCandidate.getName()))
+					.send();		
 			selectedCandidate.setVotes(result.getValue().intValue());
 			candidatesTable.refresh();
 			
@@ -177,7 +138,7 @@ public class Main extends Application {
 			logger.info("You can't vote more than 1 time\n" + e.getMessage() + "\n" + e.getStackTrace());
 		}
 	}
-	
+		
 	
 	/**
 	 * This method open new dialog window for candidate adding.
@@ -187,6 +148,47 @@ public class Main extends Application {
 	public void addCandidate(ActionEvent actionEvent) {
 		AddCandidate addCandidate = new AddCandidate();
 		addCandidate.showDialog();
+	}
+	
+	
+	public void openLoadCredentials() {
+		LoadCredentialsController controller = new LoadCredentialsController();
+		controller.showDialog();
+	}
+	
+	
+	/**
+	 * This method load existing in network contract.
+	 * 
+	 * @param String contractHash
+	 */
+	public static void setContract(String contractHash) {
+		try {
+			VOTING = Voting
+					.load(contractHash, WEB3J, CREDENTIALS, Voting.GAS_PRICE, Voting.GAS_LIMIT);
+			
+			DynamicArray<Bytes32> response = VOTING
+					.getCandidateList()
+					.send();
+			
+			for(Bytes32 item : response.getValue()) {
+				Uint8 votesOfCandidate = VOTING
+						.votesReceived(item)
+						.send();
+				
+				candidateList.add(new Candidate(new String(item.getValue()), votesOfCandidate.getValue().intValue()));
+			}
+			
+			System.out.println("Contract loaded");
+			
+		} catch (Exception e) {
+			logger.info("Contract not loaded\n" + e.getMessage() + "\n" + e.getStackTrace());
+		}
+	}
+	
+	
+	public static void setCredentials(String privateKey) {
+		CREDENTIALS = Credentials.create(privateKey);
 	}
 	
 	
