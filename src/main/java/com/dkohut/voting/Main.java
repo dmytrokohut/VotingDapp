@@ -43,7 +43,7 @@ import javafx.scene.layout.BorderPane;
 
 
 /**
- * This class give to users capability of voting for candidate, but only one time.
+ * This class is responsible for maintaining Main form activity.
  * 
  * @author Dmytro Kohut
  *
