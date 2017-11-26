@@ -14,9 +14,9 @@ dependencies {
 	compile('org.web3j:codegen:3.1.1')
 }
 
-task generateWrapper(type: JavaExec) {
-	group 'Custom'
-	description 'Create wrapper classes for solidity smart contracts'
+task generateWrappers(type: JavaExec) {
+	group 'Personal'
+	description 'Create wrappers of classes for solidity smart contracts'
 
 	classpath = sourceSets.main.runtimeClasspath
 	main = 'com.dkohut.voting.generators.WrapperGenerator'
@@ -25,8 +25,8 @@ task generateWrapper(type: JavaExec) {
 	args 'com.dkohut.voting.wrappers'
 }
 
-task compileContract(type: JavaExec) {
-	group 'Custom'
+task compileContracts(type: JavaExec) {
+	group 'Personal'
 	description 'Compile smart contracts into ".abi" and ".bin" files'
 	
 	classpath = sourceSets.main.runtimeClasspath

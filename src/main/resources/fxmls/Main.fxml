@@ -31,18 +31,31 @@
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
+            <Menu mnemonicParsing="false" text="Credentails">
+              <items>
+                  <MenuItem mnemonicParsing="false" onAction="#openLoadCredentials" text="Enter private key" />
+                <MenuItem mnemonicParsing="false" onAction="#loadCredentialsFromFile" text="Open file" />
+              </items>
+            </Menu>
           <Menu mnemonicParsing="false" text="Contract">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#openLoadCredentials" text="Load Credentails" />
                   <MenuItem fx:id="deployMenuItem" mnemonicParsing="false" onAction="#deployContract" text="Deploy New Contract" />
                   <MenuItem fx:id="loadContractMenu" mnemonicParsing="false" onAction="#loadContract" text="Load Contract" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#killContract" text="Kill contract" />
                </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Candidate">
               <items>
-                  <MenuItem mnemonicParsing="false" text="Initialize" />
+                  <MenuItem mnemonicParsing="false" onAction="#initializeInfo" text="Initialize" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                 <MenuItem mnemonicParsing="false" onAction="#addCandidate" text="Add New Candidate" />
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Events">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#newCandidateEventSubscribe" text="New candidate subscribe" />
+                  <MenuItem mnemonicParsing="false" onAction="#newCandidateEventUnsubscribe" text="New candidate unsubscribe" />
               </items>
             </Menu>
         </menus>

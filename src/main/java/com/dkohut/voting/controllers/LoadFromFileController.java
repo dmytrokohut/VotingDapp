@@ -20,30 +20,27 @@ import javafx.stage.Stage;
  * @author Dmytro Kohut
  *
  */
-public class LoadContractController {
+public class LoadFromFileController {
 	
 	// TextFields
-	@FXML private TextField contractHashField;
+	@FXML private TextField passwordField;
 	
 	// Buttons
 	@FXML private Button okButton;
 	@FXML private Button cancelButton;
 	
-	private static final Logger logger = Logger.getLogger(LoadContractController.class.getName());
+	private static final Logger logger = Logger.getLogger(LoadFromFileController.class.getName());
 	
 
-	/**
-	 * This method show LoadCredentails dialog window.
-	 */
 	public void showDialog() {
 		Stage stage = new Stage();
 		BorderPane pane;
 		
 		try {			
-			pane = (BorderPane)FXMLLoader.load(getClass().getClassLoader().getResource("fxmls/LoadContract.fxml"));
+			pane = (BorderPane)FXMLLoader.load(getClass().getClassLoader().getResource("fxmls/LoadFromFile.fxml"));
 			Scene scene = new Scene(pane);
 			stage.setScene(scene);
-			stage.setTitle("Load Credentials");
+			stage.setTitle("Enter password");
 			stage.setResizable(false);
 			stage.show();		
 			
@@ -52,15 +49,15 @@ public class LoadContractController {
 			e.getStackTrace();
 		}
 	}
-
-	public void loadContract(ActionEvent actionEvent) {
-		String contractAddress = contractHashField.getText();
-		if(contractAddress.equals(""))
+	
+	public void enterPassword(ActionEvent actionEvent) {
+		String password = passwordField.getText();
+		if(password.equals(""))
 			return;
 		
-		Main.activeForm.setContract(contractAddress);
+		Main.activeForm.loadCredentailsFile(password);
 		cancel(actionEvent);
-	}
+	}	
 	
 	public void cancel(ActionEvent actionEvent) {
 		Stage stage = (Stage) cancelButton.getScene().getWindow();

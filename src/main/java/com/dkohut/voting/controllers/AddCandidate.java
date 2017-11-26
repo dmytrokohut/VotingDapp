@@ -1,6 +1,7 @@
 package com.dkohut.voting.controllers;
 
 import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.dkohut.voting.Main;
@@ -53,33 +54,23 @@ public class AddCandidate {
 		} catch(IOException | NullPointerException e) {
 			logger.info("Window for candidate adding not loaded\n" + e.getMessage() + "\n" + e.getStackTrace());
 		}
-	}
-	
-	
-	/**
-	 * This method add new candidate into list of candidates.
-	 * 
-	 * @param ActionEvent actionEvent
-	 */
+	}	
+
 	public void add(ActionEvent actionEvent) {
-		Voting voting = Main.getVoting();
-		Main.addCandidate(new Candidate(nameField.getText(), 0));
+		Voting voting = Main.activeForm.getVoting();
+		Main.activeForm.addCandidate(new Candidate(nameField.getText(), 0));
 		
-		try {
-			voting.addCandidate(Main.stringToBytes32(nameField.getText())).send();
-			nameField.setText("");			
-			System.out.println("Candidate Added");
-			
-		} catch (Exception e) {
-			logger.info("New candidate not added\n" + e.getMessage() + "\n" + e.getStackTrace());
-		}
-	}
-	
-	/**
-	 * This method close AddCandidate dialog window.
-	 * 
-	 * @param ActionEvent actionEvent
-	 */
+		voting.addCandidate(Main.stringToBytes32(nameField.getText()))
+		.sendAsync()
+		.thenAccept((transaction) -> {
+			logger.info("Candidate added, local logger");
+		})
+		.exceptionally((error) -> {
+			logger.log(Level.SEVERE, "Error during candidate adding\n" + error.getMessage() + "\n" + error.getStackTrace());
+			return null;
+		});
+	}	
+
 	public void close(ActionEvent actionEvent) {
 		Stage stage = (Stage) closeButton.getScene().getWindow();
 		stage.close();

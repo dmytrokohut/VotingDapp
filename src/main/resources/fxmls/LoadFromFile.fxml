@@ -7,11 +7,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="168.0" prefWidth="359.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dkohut.voting.controllers.LoadCredentialsController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="169.0" prefWidth="359.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dkohut.voting.controllers.LoadFromFileController">
    <center>
       <VBox prefHeight="182.0" prefWidth="359.0" BorderPane.alignment="CENTER">
          <children>
-            <TextField fx:id="privateKeyField" promptText="Enter private key">
+            <TextField fx:id="passwordField" promptText="Your password">
                <VBox.margin>
                   <Insets left="15.0" right="15.0" top="30.0" />
                </VBox.margin>
@@ -21,7 +21,7 @@
             </TextField>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="okButton" mnemonicParsing="false" onAction="#loadCredentials" prefHeight="54.0" prefWidth="120.0" text="OK">
+                  <Button fx:id="okButton" mnemonicParsing="false" onAction="#enterPassword" prefHeight="54.0" prefWidth="120.0" text="OK">
                      <HBox.margin>
                         <Insets left="30.0" right="30.0" top="30.0" />
                      </HBox.margin>

@@ -1,29 +1,42 @@
 pragma solidity ^0.4.18;
 
-contract Voting {
+contract Owned {
     
-    address internal organizer;
+    address internal owner;
+    
+    function Owned() public {
+        owner = msg.sender;
+    }
+    
+    modifier ownerOnly() {
+        require(msg.sender == owner);
+        _;
+    }
+}
+
+contract Mortal is Owned {
+    function kill() ownerOnly external {
+        selfdestruct(owner);
+    }
+}
+
+contract Voting is Mortal {
+    
     address[] public voterList;
     bytes32[] public candidateList;
     mapping(bytes32 => uint8) public votesReceived;
     
+    event Initialized();
     event NewCandidate(address sender, bytes32 candidateName);
-    event Destroyed();
     
-    modifier organizerOnly() {
-        require(msg.sender == organizer);
-        _;
-    }
+    function Voting() Owned public {}
     
-    function Voting() public {
-        organizer = msg.sender;
-    }
-    
-    function init(bytes32[] candidateNames) organizerOnly external {
+    function init(bytes32[] candidateNames) ownerOnly external {
         for(uint8 i=0; i<candidateNames.length; i++) {
             candidateList.push(candidateNames[i]);
             votesReceived[candidateNames[i]] = 0;
         }
+        Initialized();
     }
     
     function addCandidate(bytes32 candidate) external {
@@ -59,11 +72,6 @@ contract Voting {
                 return true;
         
         return false;
-    }
-    
-    function kill() organizerOnly public {
-        selfdestruct(organizer);
-        Destroyed();
     }
     
 }

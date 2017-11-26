@@ -32,9 +32,6 @@ public class LoadCredentialsController {
 	private static final Logger logger = Logger.getLogger(LoadCredentialsController.class.getName());
 	
 
-	/**
-	 * This method show LoadCredentails dialog window.
-	 */
 	public void showDialog() {
 		Stage stage = new Stage();
 		BorderPane pane;
@@ -52,20 +49,15 @@ public class LoadCredentialsController {
 			e.getStackTrace();
 		}
 	}
-
 	
-	/**
-	 * This method send private key into method in Main class.
-	 */
 	public void loadCredentials(ActionEvent actionEvent) {
 		String privateKey = privateKeyField.getText();
 		if(privateKey.equals(""))
 			return;
 		
-		Main.setCredentials(privateKey);
+		Main.activeForm.setCredentials(privateKey);
 		cancel(actionEvent);
-	}
-	
+	}	
 	
 	public void cancel(ActionEvent actionEvent) {
 		Stage stage = (Stage) cancelButton.getScene().getWindow();
